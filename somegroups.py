@@ -1,7 +1,6 @@
 import math
 
 
-
 def powpow(a,n, identity):
     # power of monoid (semigroup) element to non-negative (positive) integer exponent
     # computed recursively
@@ -17,12 +16,8 @@ def powpow(a,n, identity):
     else:
         return identity
 
-
-
 class Group:
     pass
-
-
 
 class GroupElement:
     def __init__(self, group):
