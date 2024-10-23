@@ -80,10 +80,21 @@ class DihedralGroup(Group):
     def unit(self):
         e = GroupElement(self)
         e.order = self.order
-        e.power = 0
-        e.reflektion = 0
+        e.rotpower = 0
+        e.reflection = False
         return e
     
+    def element(self, rotpower = 0, reflection = False):
+        e = GroupElement(self)
+        e.order = self.order
+        e.rotpower = rotpower
+        e.reflection = reflection
+        return e
+    
+    def
+
+
+
     def mul(self, a, b):
         pass
     
