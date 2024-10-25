@@ -71,32 +71,64 @@ class CyclicGroup(Group):
         return g
             
 
+
+
+
 class DihedralGroup(Group):
 
-    def __init__(self, halforder):
-        self.halforder = halforder
-        self.order = 2*halforder
+    def __init__(self, halforder = None, order = None):
+        if halforder:
+            self.halforder = halforder
+            self.order = 2*halforder
+        elif order:
+            if order % 2:
+                raise ValueError("Order has to be an even number for a dihedral group.")
+            else:
+                self.order = order
+                self.halforder = order//2
+        else:
+            raise ValueError("Order or halforder (order of cyclic subgroup) not given.")
 
     def unit(self):
         e = GroupElement(self)
-        e.order = self.order
+        # e.order = self.order # should be just a group property
         e.rotpower = 0
         e.reflection = False
         return e
     
-    def element(self, rotpower = 0, reflection = False):
-        e = GroupElement(self)
-        e.order = self.order
-        e.rotpower = rotpower
-        e.reflection = reflection
+    def element(self, cyclepower = None, reflectionpower = None, other: GroupElement = None):
+        # A chosen reflection followed by a rotation
+        # Standard reflection action on [0,....n-1]: k -> n-1-k (no fix point for even n, one fixpoint for odd n) 
+        # Standard action on [0,....n-1] if reflectionpower = 1: k  -> n-1-k + rotpow mod n 
+        if other:
+            if other.group.isinstance(CyclicGroup):
+                if other.group == self.group.halforder:
+                    e = GroupElement(self)
+                    e.cyclepower = other.power
+                    e.reflection = 0
+                else:
+                    raise TypeError("Group orders does not match")
+            else:
+                raise NotImplemented()
+        elif cyclepower and reflectionpower:
+            e = GroupElement(self)
+            e.cyclepower = cyclepower
+            e.reflection = reflectionpower
+        else:
+            raise NotImplemented("Not implemented for these arguments.")
         return e
     
-    def
-
-
 
     def mul(self, a, b):
-        pass
+        e = GroupElement(self)
+        if b.reflection:
+            e.reflection = 1-a.reflection
+            e.cyclepower = b.cyclepower - a.cyclepower # Kolla så det funkar rätt
+        else:
+            e.reflection = a.reflection
+            e.cyclepower = b.cyclepower + a.cyclepower
+        return e
+
     
     ### et c ...
 
